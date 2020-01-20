@@ -2,7 +2,7 @@ Python client for Allegro.pl API
 ================================
 
 .. image:: https://travis-ci.com/mattesilver/allegro-pl.svg?branch=master
-    :target: https://travis-ci.org/mattesilver/allegro-pl
+    :target: https://travis-ci.com/mattesilver/allegro-pl
 
 .. image:: https://img.shields.io/pypi/v/mattes-allegro-pl.svg
     :target: https://pypi.org/project/mattes-allegro-pl/

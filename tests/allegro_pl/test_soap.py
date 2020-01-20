@@ -4,7 +4,7 @@ from unittest.mock import Mock
 import requests
 import tenacity
 import zeep.exceptions
-from allegro_pl.soap import AllegroSoapService, _token_needs_refresh
+from allegro_pl.soap import AllegroSoapService, _get_service, _token_needs_refresh
 
 
 class TestSoap(TestCase):
@@ -106,3 +106,20 @@ class TestSoap(TestCase):
             return_value=requests.exceptions.ConnectionError(Exception('Connection aborted.')))
 
         self.assertTrue(_token_needs_refresh(retry_state))
+
+    def test_wrapper(self):
+        def erring(*_):
+            raise zeep.exceptions.Fault('message', code='ERR_NO_SESSION')
+
+        # with patch.object(AllegroSoapService, 'get_items_info', side_effect=erring) as mocked_method:
+        client = Mock()
+        client.service.doGetItemsInfo.side_effect = erring
+
+        retry_mock = Mock()
+
+        service = _get_service(client, "C_ID", 1, retry_mock)
+
+        with self.assertRaises(zeep.exceptions.Fault):
+            service.get_items_info([1])
+
+        self.assertEqual(2, len(retry_mock.mock_calls))

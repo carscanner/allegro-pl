@@ -58,11 +58,17 @@ class AllegroSoapService:
 def get_client_and_service(api_uri: str, client_id: str, country_code: int, refresh_access_token_fn) -> typing.Tuple[
     zeep.client.Client, AllegroSoapService]:
     client = zeep.client.Client(api_uri)
+    service = _get_service(client, client_id, country_code, refresh_access_token_fn)
+    return client, service
 
+
+def _get_service(client: zeep.client.Client, client_id: str, country_code: int,
+                 refresh_access_token_fn) -> AllegroSoapService:
     service = AllegroSoapService(client, client_id, country_code)
 
     def before_call(retry_state: tenacity.RetryCallState):
-        if service.session_handle is None:
+        # re-login even if session_handle is present, if it's second attempt, the session handle is invalid
+        if service.session_handle is None or retry_state.attempt_number != 1:
             service.login_with_access_token()
 
     def before_login(retry_state: tenacity.RetryCallState):
@@ -73,7 +79,7 @@ def get_client_and_service(api_uri: str, client_id: str, country_code: int, refr
 
     _wrap_methods(service, method_decorator, login_decorator)
 
-    return client, service
+    return service
 
 
 def _get_retrying(before_fn):
