@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mattes-allegro-pl"
-version = "0.7.1"
+version = "0.7.2"
 description = "Python client for Allegro.pl API"
 authors = ["Raphael Krupinski"]
 license = 'MIT'
@@ -18,7 +18,7 @@ zeep = "^3.3"
 
 [tool.poetry.dev-dependencies]
 codecov = "^2.0"
-pytest = "^3.0"
+pytest = "^5.3"
 pytest-cov = "^2.6"
 toml = "^0.10.0"
 

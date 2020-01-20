@@ -96,8 +96,9 @@ def _token_needs_refresh(retry_state: tenacity.RetryCallState) -> bool:
         return True
     if isinstance(x, allegro_api.rest.ApiException) and x.status == 401:
         body = json.loads(x.body)
+        # don't log more data from body, may contain secrets
         log.warning(body['error'])
-        return body['error'] == 'invalid_token' and body['error_description'].startswith('Access token expired: ')
+        return body['error'] == 'invalid_token'
     elif is_connection_aborted(x):
         return True
     else:
