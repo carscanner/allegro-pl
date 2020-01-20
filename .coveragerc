@@ -1,6 +1,6 @@
 [run]
 branch = True
-source = src/allegro_pl
+source = src
 
 [report]
 exclude_lines =
