@@ -31,8 +31,8 @@ class AllegroRestService:
             params['parent_id'] = parent_id
         return self._cat_service.get_categories_using_get(**params)
 
-    def get_listing(self, search_params, **kwargs) -> allegro_api.models.ListingResponse:
-        return self._offer_service.get_listing(search_params, **self._extra_params(kwargs))
+    def get_listing(self, **kwargs) -> allegro_api.models.ListingResponse:
+        return self._offer_service.get_listing(**kwargs)
 
     get_listing.limit_min = 1
     get_listing.limit_max = 100
