@@ -1,10 +1,10 @@
 [[package]]
 category = "main"
-description = "Allegro REST API client"
+description = "Allegro REST API"
 name = "allegro-pl-rest-api"
 optional = false
 python-versions = "*"
-version = "2019.4"
+version = "2020.1.28"
 
 [package.dependencies]
 certifi = "*"
