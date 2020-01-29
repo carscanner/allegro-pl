@@ -42,7 +42,7 @@ class AllegroSoapService:
     def _set_access_token(self, value: str) -> None:
         if self._access_token != value:
             self.session_handle = None
-        self._access_token = value
+            self._access_token = value
 
     access_token = property(fset=_set_access_token)
 
