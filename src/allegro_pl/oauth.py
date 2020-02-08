@@ -1,12 +1,14 @@
 import abc
 import logging
 import typing
+import datetime
 
 import oauthlib.oauth2
 import requests_oauthlib
 
 _ACCESS_TOKEN = 'access_token'
 _REFRESH_TOKEN = 'refresh_token'
+_KEY_TIMESTAMP = 'timestamp'
 
 URL_TOKEN = 'https://allegro.pl/auth/oauth/token'
 URL_AUTHORIZE = 'https://allegro.pl/auth/oauth/authorize'
@@ -15,9 +17,10 @@ logger = logging.getLogger(__name__)
 
 
 class TokenStore:
-    def __init__(self, access_token: str = None, refresh_token: str = None):
+    def __init__(self, access_token: str = None, refresh_token: str = None, timestamp: datetime.datetime = None):
         self._access_token = access_token
         self._refresh_token = refresh_token
+        self._timestamp = timestamp
 
     def save(self) -> None:
         logger.info('Not saving tokens')
@@ -28,6 +31,8 @@ class TokenStore:
 
     @access_token.setter
     def access_token(self, access_token: str) -> None:
+        if self._access_token != access_token:
+            self._timestamp = datetime.datetime.utcnow()
         self._access_token = access_token
 
     @property
@@ -36,6 +41,8 @@ class TokenStore:
 
     @refresh_token.setter
     def refresh_token(self, refresh_token: str) -> None:
+        if self._refresh_token != refresh_token:
+            self._timestamp = datetime.datetime.utcnow()
         self._refresh_token = refresh_token
 
     @classmethod
@@ -49,6 +56,7 @@ class TokenStore:
     def update_from_dict(self, data: dict) -> None:
         self.access_token = data.get(_ACCESS_TOKEN)
         self.refresh_token = data.get(_REFRESH_TOKEN)
+        self._timestamp = data.get(_KEY_TIMESTAMP)
 
     def to_dict(self) -> dict:
         d = {}
@@ -56,6 +64,8 @@ class TokenStore:
             d[_ACCESS_TOKEN] = self.access_token
         if self._refresh_token:
             d[_REFRESH_TOKEN] = self.refresh_token
+        if self._timestamp:
+            d[_KEY_TIMESTAMP] = self._timestamp
         return d
 
 
