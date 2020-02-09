@@ -63,3 +63,39 @@ class TestTokenStore(TestCase):
         dic = ts.to_dict()
         self.assertEqual('a', dic.get(_REFRESH_TOKEN))
         self.assertIn(_KEY_TIMESTAMP, dic.keys())
+
+    def test_update_from_dict(self):
+        ts = datetime.datetime.utcnow()
+        dic = {
+            _ACCESS_TOKEN: 'a',
+            _REFRESH_TOKEN: 'b',
+            _KEY_TIMESTAMP: ts,
+        }
+        store = TokenStore()
+        store.update_from_dict(dic)
+        self.assertEqual('a', store.access_token)
+        self.assertEqual('b', store.refresh_token)
+        self.assertEqual(ts, store._timestamp)
+
+    def test_update_from_dict_no_ts(self):
+        dic = {
+            _ACCESS_TOKEN: 'a',
+            _REFRESH_TOKEN: 'b',
+        }
+        store = TokenStore()
+        store.update_from_dict(dic)
+        self.assertEqual('a', store.access_token)
+        self.assertEqual('b', store.refresh_token)
+        self.assertIsNone(store._timestamp)
+
+    def test_update_from_dict_empty(self):
+        dic = {}
+        store = TokenStore()
+        store.update_from_dict(dic)
+        self.assertIsNone(store.access_token)
+        self.assertIsNone(store.refresh_token)
+        self.assertIsNone(store._timestamp)
+
+    def test_update_from_dict_none(self):
+        store = TokenStore()
+        self.assertRaises(AttributeError, lambda: store.update_from_dict(None))

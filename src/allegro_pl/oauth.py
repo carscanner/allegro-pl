@@ -54,8 +54,8 @@ class TokenStore:
         return ts
 
     def update_from_dict(self, data: dict) -> None:
-        self.access_token = data.get(_ACCESS_TOKEN)
-        self.refresh_token = data.get(_REFRESH_TOKEN)
+        self._access_token = data.get(_ACCESS_TOKEN)
+        self._refresh_token = data.get(_REFRESH_TOKEN)
         self._timestamp = data.get(_KEY_TIMESTAMP)
 
     def to_dict(self) -> dict:
