@@ -5,4 +5,4 @@ from .rest import AllegroRestService
 from .soap import AllegroSoapService
 
 __name__ = 'mattes-allegro-pl'
-__version__ = '0.9.0'
+__version__ = '0.9.1'
